@@ -24,7 +24,7 @@ public class Main {
                                                  new OptionData(OptionType.STRING, "country_b", "Second country", true),
                                                  new OptionData(OptionType.STRING, "image", "Image of the embed", true),
                                                  new OptionData(OptionType.STRING, "question", "Extra question", true),
-                                                 new OptionData(OptionType.NUMBER, "hours", "How long to keep it open", true))
+                                                 new OptionData(OptionType.INTEGER, "hours", "How long to keep it open", true))
                                      .setGuildOnly(true)
                                      .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.MANAGE_SERVER))).queue();
     }

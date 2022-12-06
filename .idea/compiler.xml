@@ -6,8 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="sockbot" />
+        <module name="SOCK_Bot" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="sockbot" target="14" />
+    </bytecodeTargetLevel>
   </component>
 </project>

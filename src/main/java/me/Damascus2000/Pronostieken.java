@@ -32,14 +32,19 @@ public class Pronostieken extends ListenerAdapter {
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event){
         String userid = event.getUser().getId();
         if (event.getName().equals("pronostiek")){
+            if (event.getOption("question").getAsString().length() > 45){
+                event.reply("Question must be shorter than 45 characters").setEphemeral(true).queue();
+                return;
+            }
             String descr = String.format("%s %s - %s %s", event.getOption("emoji_a").getAsString(), event.getOption("country_a").getAsString(),
                                           event.getOption("country_b").getAsString(), event.getOption("emoji_b").getAsString());
             EmbedBuilder eb = new EmbedBuilder();
             String date = event.getOption("date").getAsString();
             eb.setTitle(String.format("WK Voetbal %s", date));
-            eb.setDescription(String.format("%s\nGeef jouw pronostiek en maak kans op een **gratis** consumptie. Dit sluit <t:%s:R>", descr, LocalDateTime.now().plusHours(event.getOption("hours").getAsInt()).toEpochSecond(ZoneOffset.UTC)));
+            int hours = event.getOption("hours").getAsInt();
+            eb.setDescription(String.format("%s\nGeef jouw pronostiek en maak kans op een **gratis** consumptie. Dit sluit <t:%s:R>", descr, LocalDateTime.now().plusHours(hours).toEpochSecond(ZoneOffset.UTC)));
             eb.setImage(event.getOption("image").getAsString());
-            dates.put(date, LocalDateTime.now().plusHours(event.getOption("hours").getAsInt()));
+            dates.put(date, LocalDateTime.now().plusHours(hours));
             pronostieken.put(date, new ArrayList<>());
             event.replyEmbeds(eb.build()).addActionRow(Button.primary(
                     String.format("%s_%s_%s", event.getOption("date").getAsString(), descr, event.getOption("question").getAsString()),
