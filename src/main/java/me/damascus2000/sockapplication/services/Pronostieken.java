@@ -1,4 +1,4 @@
-package me.Damascus2000;
+package me.damascus2000.sockapplication.services;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 
 public class Pronostieken extends ListenerAdapter {
 
