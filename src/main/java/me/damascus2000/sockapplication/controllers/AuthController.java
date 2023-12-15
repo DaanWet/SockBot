@@ -47,6 +47,7 @@ public class AuthController {
     @GetMapping(value = "/username")
     @ResponseBody
     public ResponseEntity<String> currentUserName(Authentication authentication) {
+        System.out.println(authentication);
         if (authentication == null) {
             return ResponseEntity.notFound().build();
         }

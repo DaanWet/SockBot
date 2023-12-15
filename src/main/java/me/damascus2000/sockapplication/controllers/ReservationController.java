@@ -31,8 +31,8 @@ public class ReservationController {
     @Autowired
     public ReservationController(ReservationService reservationService){
         this.reservationService = reservationService;
-        this.dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        this.timeFormatter = DateTimeFormatter.ofPattern("hh-mm");
+        this.dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        this.timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
     }
 
@@ -45,13 +45,15 @@ public class ReservationController {
 
     @PostMapping("")
     public ResponseEntity<Object> postReservation(@RequestBody JsonNode json) throws Exception{
-        String name = String.valueOf(json.get("name"));
-        String email = String.valueOf(json.get("email"));
+        String name = json.get("name").asText();
+        String email = json.get("email").asText();
         JsonNode n = json.get("reservations");
+        System.out.println(n);
         for (JsonNode next : n){
-            String dayS = String.valueOf(next.get("day"));
-            String startS = String.valueOf(next.get("start"));
-            String endS = String.valueOf(next.get("end"));
+            System.out.println(next);
+            String dayS = next.get("day").asText();
+            String startS = next.get("start").asText();
+            String endS = next.get("end").asText();
             LocalDate day = LocalDate.from(dateFormatter.parse(dayS));
             LocalTime start = LocalTime.from(timeFormatter.parse(startS));
             LocalTime end = LocalTime.from(timeFormatter.parse(endS));
@@ -74,12 +76,11 @@ public class ReservationController {
         if (!authentication.isAuthenticated()){
             return ResponseEntity.notFound().build();
         }
-        System.out.println(node.get("day").asText());
-        String dayS = String.valueOf(node.get("day").asText());
+        String dayS = node.get("day").asText();
         LocalDate day = LocalDate.from(dateFormatter.parse(dayS));
         ReservationDay reservationDay = new ReservationDay(day);
         if (node.has("end")){
-            String endS = String.valueOf(node.get("end"));
+            String endS = node.get("end").asText();
             LocalTime end = LocalTime.from(timeFormatter.parse(endS));
             reservationDay = new ReservationDay(day, end);
         }

@@ -9,7 +9,8 @@ public class AuthSuccessHandlerImpl implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        response.setHeader("Access-Control-Allow-Origin","*");
+        response.setHeader("Access-Control-Allow-Origin","http://localhost:3000");
+        response.setHeader("Access-Control-Allow-Credentials","true");
         response.setStatus(HttpServletResponse.SC_OK);
     }
 }

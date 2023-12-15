@@ -53,8 +53,9 @@ public class SecurityConfiguration {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://172.29.128.1:8080", "http://localhost:3000"));
+        configuration.setAllowedOrigins(Arrays.asList("http://172.29.128.1:8080", "http://localhost:3000", "https://blok.jhsock.be"));
         configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
