@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import me.damascus2000.sockapplication.dtos.Reservation;
 import me.damascus2000.sockapplication.dtos.ReservationDay;
+import me.damascus2000.sockapplication.dtos.ReservationDayDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
@@ -49,11 +50,34 @@ public class ReservationService extends DataHandler {
         return false;
     }
 
+    public boolean removeReservationDay(LocalDate day) throws Exception{
+        String dayString = day.format(format);
+        HashMap<String, ReservationDay> reservations = read();
+        System.out.println(dayString);
+        System.out.println(reservations.keySet());
+        if (reservations.containsKey(dayString)){
+            reservations.remove(dayString);
+            save(reservations);
+            return true;
+        }
+
+        return false;
+    }
+
     public Collection<ReservationDay> getReservations() throws Exception{
         HashMap<String, ReservationDay> reservations = read();
         return reservations.values();
     }
 
+    public HashMap<String, ReservationDay> getReservations(String email) throws Exception {
+        HashMap<String, ReservationDay> reservations = read();
+        System.out.println(reservations);
+        reservations.forEach((key, value) -> {
+            value.setReservations(value.getReservations().stream().filter(res -> res.getEmail().equalsIgnoreCase(email)).collect(Collectors.toList()));
+        });
+        System.out.println(reservations);
+        return reservations;
+    }
     public void addReservation(String name, String email, LocalDate day, LocalTime start, LocalTime end) throws Exception {
         String dayString = day.format(format);
         HashMap<String, ReservationDay> reservations = read();
