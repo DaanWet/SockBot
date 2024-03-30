@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Getter
 @JsonPropertyOrder({"CreationDate", "SubscriptionDate", "StartDate", "EndDate", "PersonId", "Payed", "MemberTypeId", "OrganizationId", "Organization",
     "NumberFederation", "NumberBond", "MemberMoneyTeam1", "MemberMoneyTeam2", "MemberMoneyTeam3", "MemberMoneyTeam4", "MemberMoneyTeam5", "FamilyDiscount",
@@ -76,4 +79,9 @@ public class AssistMember extends Member {
     private Person person;
     @JsonProperty("WaitinglistMemberAccessKey")
     private String waitinglistMemberAccessKey;
+
+    public boolean hasPayedOrIsNew() {
+        return hasPayed() || LocalDateTime.parse(creationDate == null ? startDate : creationDate, DateTimeFormatter.ISO_DATE_TIME)
+            .isAfter(LocalDateTime.now().minusMonths(3));
+    }
 }

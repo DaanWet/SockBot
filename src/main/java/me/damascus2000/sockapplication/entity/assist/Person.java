@@ -118,6 +118,16 @@ public class Person extends MinimalPerson {
         return getCustomEntityField(DISCORD_ID_CUSTOM_ENTITY_ID).getValue();
     }
 
+    @JsonIgnore
+    public boolean hasDiscordId() {
+        return getDiscordId() != null && !getDiscordId().isBlank();
+    }
+
+    @JsonIgnore
+    public boolean hasDiscordName() {
+        return getDiscordName() != null && !getDiscordName().isBlank();
+    }
+
     @NotNull
     @JsonIgnore
     private CustomEntityFieldValue getCustomEntityField(int id) {

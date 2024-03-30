@@ -11,7 +11,10 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
+import net.dv8tion.jda.api.utils.ChunkingFilter;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -30,7 +33,11 @@ public class BotConfiguration {
     @Bean
     public JDA getDiscordClient(@Autowired AssistService assistService) throws Exception {
         System.out.println(token);
-        JDA jda = JDABuilder.createDefault(token).build();
+        JDA jda = JDABuilder.createDefault(token)
+            .setChunkingFilter(ChunkingFilter.ALL)
+            .setMemberCachePolicy(MemberCachePolicy.ALL)
+            .enableIntents(GatewayIntent.GUILD_MEMBERS)
+            .build();
         jda.addEventListener(new Pronostieken());
         jda.addEventListener(new MembersCommand(assistService));
         CommandListUpdateAction commands = jda.updateCommands();
@@ -47,6 +54,10 @@ public class BotConfiguration {
                 .setGuildOnly(true)
                 .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.MANAGE_SERVER)),
             Commands.slash("members", "get members from Assist")
+                .addSubcommands(
+                    new SubcommandData("list", "List all Assist Members"),
+                    new SubcommandData("prune", "Match discord members roles with Assist members")
+                )
                 .setGuildOnly(true)
                 .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.MANAGE_SERVER)),
             Commands.slash("member", "Lidmaatschap beheren")
