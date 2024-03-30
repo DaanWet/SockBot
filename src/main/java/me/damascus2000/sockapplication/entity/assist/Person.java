@@ -110,20 +110,31 @@ public class Person extends MinimalPerson {
 
     @JsonIgnore
     public String getDiscordName() {
-        return getDiscordNameField().getValue();
+        return getCustomEntityField(DISCORD_NAME_CUSTOM_ENTITY_ID).getValue();
+    }
+
+    @JsonIgnore
+    public String getDiscordId() {
+        return getCustomEntityField(DISCORD_ID_CUSTOM_ENTITY_ID).getValue();
     }
 
     @NotNull
     @JsonIgnore
-    private CustomEntityFieldValue getDiscordNameField() {
+    private CustomEntityFieldValue getCustomEntityField(int id) {
         return getCustomEntityFieldValues().stream()
-            .filter(customEntityFieldValue -> customEntityFieldValue.getCustomEntityFieldId() == DISCORD_NAME_CUSTOM_ENTITY_ID)
+            .filter(customEntityFieldValue -> customEntityFieldValue.getCustomEntityFieldId() == id)
             .findFirst().get();
     }
 
     public void setDiscordName(String name) {
-        getCustomEntityFieldValues().stream()
-            .filter(customEntityFieldValue -> customEntityFieldValue.getCustomEntityFieldId() == DISCORD_NAME_CUSTOM_ENTITY_ID)
-            .findFirst().get().setValue(name);
+        setCustomEntityFieldValue(DISCORD_NAME_CUSTOM_ENTITY_ID, name);
+    }
+
+    public void setDiscordUserId(String id) {
+        setCustomEntityFieldValue(DISCORD_ID_CUSTOM_ENTITY_ID, id);
+    }
+
+    private void setCustomEntityFieldValue(int id, String value) {
+        getCustomEntityField(id).setValue(value);
     }
 }

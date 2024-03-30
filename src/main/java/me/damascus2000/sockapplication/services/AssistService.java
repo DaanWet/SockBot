@@ -16,6 +16,8 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.function.Consumer;
+
 @Service
 public class AssistService {
 
@@ -107,13 +109,15 @@ public class AssistService {
             });
     }
 
-    public void savePerson(Person person) {
+    public void savePerson(Person person, Consumer<? super ResponseEntity<Void>> onSucces, Consumer<? super Throwable> onError) {
         webClient.put()
             .uri(PERSON + person.getId())
             .cookie(MODULAS_COOKIE, this.cookies.get(MODULAS_COOKIE).getFirst().getValue())
             .bodyValue(person)
             .retrieve()
             .toBodilessEntity()
+            .doOnSuccess(onSucces)
+            .doOnError(onError)
             .subscribe();
     }
 

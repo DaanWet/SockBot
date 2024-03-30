@@ -20,6 +20,7 @@ import java.util.List;
 @Component
 public class MembersCommand extends ListenerAdapter {
 
+    private static final long MEMBER_ROLE_ID = 934889688261611621L;
     public final AssistService assistService;
     public static final String greenTick = "✅";
     public static final String redTick = "❌";
@@ -86,11 +87,11 @@ public class MembersCommand extends ListenerAdapter {
                     if (response.getBody().getCount() == 0) {
                         event.getHook().sendMessage("Geef een voornaam EN achternaam op").queue();
                     } else {
-                        event.getHook().sendMessage("Should save in future").queue();
+                        saveDiscordToUser(response.getBody().getItems().getFirst(), event,
+                            event.getMember().getUser().getName());
                     }
                 }).subscribe();
             } else {
-                System.out.println(event.getOption("voornaam").getAsString() + " " + event.getOption("achternaam").getAsString());
                 assistService.getMonoMembers(event.getOption("voornaam").getAsString() + " " + event.getOption("achternaam").getAsString())
                     .doOnSuccess(response -> {
                         if (response.getBody().getCount() == 0) {
@@ -104,11 +105,30 @@ public class MembersCommand extends ListenerAdapter {
         }
     }
 
-    public void saveDiscordToUser(MinimalAssistMember assistMember, SlashCommandInteractionEvent event, String newName) {
+    public void saveDiscordToUser(MinimalAssistMember assistMember, SlashCommandInteractionEvent event, String
+        newName) {
         assistService.getMonoPerson(assistMember.getPerson().getId()).doOnSuccess(person -> {
-            person.getBody().setDiscordName(newName);
-            assistService.savePerson(person.getBody());
-            event.getHook().sendMessage("Saved").queue();
+            if (person.getBody().getDiscordId() == null || person.getBody().getDiscordId().isEmpty()) {
+                person.getBody().setDiscordName(newName);
+                person.getBody().setDiscordUserId(event.getUser().getId());
+                assistService.savePerson(
+                    person.getBody(),
+                    s -> {
+                        event.getHook().sendMessage(String.format("Linked %s with %s", assistMember.getPerson().getName(), event.getMember().getAsMention()))
+                            .queue();
+                        if (assistMember.hasPayed()) {
+                            event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById(MEMBER_ROLE_ID)).queue();
+                        } else {
+                            event.getGuild().removeRoleFromMember(event.getMember(), event.getGuild().getRoleById(MEMBER_ROLE_ID)).queue();
+                        }
+                        event.getMember().modifyNickname(assistMember.getPerson().getName()).queue();
+                    },
+                    err -> {
+                        event.getHook().sendMessage(err.getMessage()).queue();
+                    });
+            } else {
+                event.getHook().sendMessage("There already is a user connected tot this account").queue();
+            }
         }).subscribe();
     }
 }
