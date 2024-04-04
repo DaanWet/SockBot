@@ -37,8 +37,11 @@ jobs:
         run: |
           echo "Start"
           cd src/main/resources
+          pwd
           sed "s|assist.email|$ASSISTEMAIL|g;" application.default.properties > application.properties
           echo "First"
+          cat application.default.properties
+          cat application.properties
           sed "s|assist.generator|$ASSISTGENERATOR|g;" application.properties > application.properties
           sed "s|assist.PASSWORD|$ASSISTPASSWORD|g;" application.properties > application.properties
           sed "s|assist.VALIDATION|$ASSISTVALIDATION|g;" application.properties > application.properties
