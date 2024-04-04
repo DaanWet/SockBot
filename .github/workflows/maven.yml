@@ -44,7 +44,7 @@ jobs:
           cat application.default.properties
           cat application.properties
           sed "s|ASSIST.GENERATOR|$ASSISTGENERATOR|g;" application.properties > application.properties
-          cat application.propertiers
+          cat application.properties
           sed "s|ASSIST.PASSWORD|$ASSISTPASSWORD|g;" application.properties > application.properties
           sed "s|ASSIST.VALIDATION|$ASSISTVALIDATION|g;" application.properties > application.properties
           sed "s|ASSIST.VIEWSTATE|$ASSISTVIEWSTATE|g;" application.properties > application.properties
