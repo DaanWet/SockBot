@@ -38,15 +38,15 @@ jobs:
           echo "Start"
           cd src/main/resources
           pwd
-          sed "s|$assist.email$|$ASSISTEMAIL|g;" application.default.properties > application.properties
+          sed "s|\$assist.email\$|$ASSISTEMAIL|g;" application.default.properties > application.properties
           echo "First"
           cat application.default.properties
           cat application.properties
-          sed "s|$assist.generator$|$ASSISTGENERATOR|g;" application.properties > application.properties
-          sed "s|$assist.password$|$ASSISTPASSWORD|g;" application.properties > application.properties
-          sed "s|$assist.validation$|$ASSISTVALIDATION|g;" application.properties > application.properties
-          sed "s|$assist.viewstate$|$ASSISTVIEWSTATE|g;" application.properties > application.properties
-          sed "s|$token$|$DISCORDTOKEN|g;" application.properties > application.properties
+          sed "s|\$assist.generator\$|$ASSISTGENERATOR|g;" application.properties > application.properties
+          sed "s|\$assist.password\$|$ASSISTPASSWORD|g;" application.properties > application.properties
+          sed "s|\$assist.validation\$|$ASSISTVALIDATION|g;" application.properties > application.properties
+          sed "s|\$assist.viewstate\$|$ASSISTVIEWSTATE|g;" application.properties > application.properties
+          sed "s|\$token\$|$DISCORDTOKEN|g;" application.properties > application.properties
           echo "End"
           cat application.properties
 
