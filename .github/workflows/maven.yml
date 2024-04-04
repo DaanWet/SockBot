@@ -25,6 +25,23 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
         cache: maven
+    - name: Setup application.properties
+      env:        
+        ASSISTEMAIL: ${{ secrets.ASSIST_EMAIL }}
+        ASSISTGENERATOR: ${{ secrets.ASSIST_GENERATOR }}
+        ASSISTPASSWORD: ${{ secrets.ASSIST_PASSWORD }}
+        ASSISTVALIDATION: ${{ secrets.ASSIST_VALIDATION }}
+        ASSISTVIEWSTATE: ${{ secrets.ASSIST_VIEWSTATE }}
+        DISCORDTOKEN: ${{ secrets.DISCORD_TOKEN }}
+    
+      run: |
+          sed "s|assist.email|$ASSISTEMAIL|g;" application.default.properties > application.properties
+          sed "s|assist.generator|$ASSISTGENERATOR|g;" application.properties > application.properties
+          sed "s|assist.PASSWORD|$ASSISTPASSWORD|g;" application.properties > application.properties
+          sed "s|assist.VALIDATION|$ASSISTVALIDATION|g;" application.properties > application.properties
+          sed "s|assist.VIEWSTATE|$ASSISTVIEWSTATE|g;" application.properties > application.properties
+          sed "s|DISCORD.TOKEN|$DISCORDTOKEN|g;" application.properties > application.properties
+          
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
