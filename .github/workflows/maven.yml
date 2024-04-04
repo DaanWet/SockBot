@@ -35,6 +35,7 @@ jobs:
         DISCORDTOKEN: ${{ secrets.DISCORD_TOKEN }}
     
       run: |
+          cd src/main/resources
           sed "s|assist.email|$ASSISTEMAIL|g;" application.default.properties > application.properties
           sed "s|assist.generator|$ASSISTGENERATOR|g;" application.properties > application.properties
           sed "s|assist.PASSWORD|$ASSISTPASSWORD|g;" application.properties > application.properties
