@@ -46,3 +46,5 @@ build/
 .idea/misc.xml
 mvnw
 mvnw.cmd
+src/main/resources/application.properties
+src/test/resources/application.properties
