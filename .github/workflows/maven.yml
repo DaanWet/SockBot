@@ -35,13 +35,16 @@ jobs:
           DISCORDTOKEN: ${{ secrets.DISCORD_TOKEN }}
 
         run: |
+          echo "Start"
           cd src/main/resources
           sed "s|assist.email|$ASSISTEMAIL|g;" application.default.properties > application.properties
+          echo "First"
           sed "s|assist.generator|$ASSISTGENERATOR|g;" application.properties > application.properties
           sed "s|assist.PASSWORD|$ASSISTPASSWORD|g;" application.properties > application.properties
           sed "s|assist.VALIDATION|$ASSISTVALIDATION|g;" application.properties > application.properties
           sed "s|assist.VIEWSTATE|$ASSISTVIEWSTATE|g;" application.properties > application.properties
           sed "s|DISCORD.TOKEN|$DISCORDTOKEN|g;" application.properties > application.properties
+          echo "End"
           cat application.properties
 
       - name: Build with Maven
