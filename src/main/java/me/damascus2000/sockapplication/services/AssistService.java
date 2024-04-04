@@ -45,6 +45,7 @@ public class AssistService {
     private MultiValueMap<String, String> formData;
 
     public AssistService(@Autowired WebClient webClient, @Autowired MultiValueMap<String, String> formData) throws Exception {
+
         this.webClient = webClient;
         this.formData = formData;
         authenticate();
@@ -58,7 +59,6 @@ public class AssistService {
             .body(BodyInserters.fromFormData(formData))
             .retrieve()
             .onStatus(HttpStatusCode::is3xxRedirection, clientResponse -> {
-                System.out.println(clientResponse.cookies());
                 clientResponse.cookies().forEach(this.cookies::addAll);
                 return Mono.empty();
             })

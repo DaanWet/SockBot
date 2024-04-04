@@ -32,7 +32,6 @@ public class BotConfiguration {
 
     @Bean
     public JDA getDiscordClient(@Autowired AssistService assistService) throws Exception {
-        System.out.println(token);
         JDA jda = JDABuilder.createDefault(token)
             .setChunkingFilter(ChunkingFilter.ALL)
             .setMemberCachePolicy(MemberCachePolicy.ALL)

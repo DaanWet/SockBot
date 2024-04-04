@@ -46,7 +46,6 @@ public class AssistWebClientConfiguration {
         formData.add("__EVENTVALIDATION", assistValidation);
         formData.add("__VIEWSTATE", assistViewstate);
         formData.add("__VIEWSTATEGENERATOR", assistGenerator);
-        System.out.println(formData);
         return formData;
     }
 }

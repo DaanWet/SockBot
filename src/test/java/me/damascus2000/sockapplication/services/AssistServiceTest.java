@@ -5,22 +5,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.damascus2000.sockapplication.configurations.AssistWebClientConfiguration;
 import me.damascus2000.sockapplication.entity.assist.AssistMember;
 import me.damascus2000.sockapplication.entity.assist.MembersResponseEntity;
 import me.damascus2000.sockapplication.entity.assist.Person;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
+@SpringBootTest
 class AssistServiceTest {
 
-    //TODO
-    private AssistWebClientConfiguration config = new AssistWebClientConfiguration();
-
-    private AssistService assistService =
-        new AssistService(config.webClient(), config.createLoginFormData());
+    @Autowired
+    private AssistService assistService;
 
     AssistServiceTest() throws Exception {
     }

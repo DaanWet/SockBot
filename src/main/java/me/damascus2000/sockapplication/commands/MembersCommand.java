@@ -158,13 +158,14 @@ public class MembersCommand extends ListenerAdapter {
 
     public void saveDiscordToUser(MinimalAssistMember assistMember, SlashCommandInteractionEvent event, String
         newName) {
-        assistService.getMonoMember(assistMember.getPerson().getId()).doOnSuccess(memberResponseEntity -> {
+        assistService.getMonoMember(assistMember.getId()).doOnSuccess(memberResponseEntity -> {
             AssistMember member = memberResponseEntity.getBody();
-            if (!member.getPerson().hasDiscordId()) {
-                member.getPerson().setDiscordName(newName);
-                member.getPerson().setDiscordUserId(event.getUser().getId());
+            Person person = member.getPerson();
+            if (!person.hasDiscordId()) {
+                person.setDiscordName(newName);
+                person.setDiscordUserId(event.getUser().getId());
                 assistService.savePerson(
-                    member.getPerson(),
+                    person,
                     s -> sendSuccessMessageAndModifyUserRoles(member, event),
                     err -> sendMessage(event, err.getMessage()));
             } else {
