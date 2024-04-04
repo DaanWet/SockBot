@@ -45,7 +45,7 @@ public class AssistService {
     private MultiValueMap<String, String> formData;
 
     public AssistService(@Autowired WebClient webClient, @Autowired MultiValueMap<String, String> formData) throws Exception {
-
+        System.out.println(formData);
         this.webClient = webClient;
         this.formData = formData;
         authenticate();
