@@ -8,12 +8,14 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4
+      - name: Build with Maven
+        run: mvn package -Dmaven.test.skip=true -f pom.xml
       - name: copy file via ssh key
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          source: "SockApplication.jar"
+          source: "/target/SockApplication*.jar"
           target: /home/daan/DiscordBots/SockBot
           overwrite: true
