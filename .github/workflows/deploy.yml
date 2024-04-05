@@ -22,6 +22,6 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          source: "/target/SockApplication*.jar"
+          source: "./target/SockApplication*.jar"
           target: /home/daan/DiscordBots/SockBot
           overwrite: true
