@@ -5,6 +5,13 @@ on:
 jobs:
   test-build:
     uses: ./.github/workflows/maven.yml
+    secrets:
+      ASSIST_EMAIL: ${{secrets.ASSIST_EMAIL}}
+      ASSIST_GENERATOR: ${{secrets.ASSIST_GENERATOR}}
+      ASSIST_PASSWORD: ${{secrets.ASSIST_PASSWORD}}
+      ASSIST_VALIDATION: ${{secrets.ASSIST_VALIDATION}}
+      ASSIST_VIEWSTATE: ${{secrets.ASSIST_VIEWSTATE}}
+      DISCORD_TOKEN: ${{secrets.DISCORD_TOKEN}}
   deploy:
     if: github.branch == 'master'
     runs-on: ubuntu-latest

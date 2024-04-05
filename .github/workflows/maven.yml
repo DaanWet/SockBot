@@ -10,6 +10,19 @@ name: Maven
 
 on:
   workflow_call:
+    secrets:
+      ASSIST_EMAIL:
+        required: true
+      ASSIST_GENERATOR:
+        required: true
+      ASSIST_PASSWORD:
+        required: true
+      ASSIST_VALIDATION:
+        required: true
+      ASSIST_VIEWSTATE:
+        required: true
+      DISCORD_TOKEN:
+        required: true
 
 
 jobs:
