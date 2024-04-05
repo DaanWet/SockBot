@@ -25,3 +25,4 @@ jobs:
           source: "./target/SockApplication*.jar"
           target: /home/daan/DiscordBots/SockBot
           overwrite: true
+          strip_components: 1
