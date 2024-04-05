@@ -9,7 +9,8 @@
 name: Maven
 
 on:
-  - push
+  workflow_call:
+
 
 jobs:
   compile:
