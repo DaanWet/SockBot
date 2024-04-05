@@ -13,6 +13,6 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
+          key: ${{ secrets.SSH_KEY }}
           source: "SockApplication.jar"
           target: /home/daan/DiscordBots/SockBot
