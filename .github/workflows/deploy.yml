@@ -1,6 +1,6 @@
 on:
   push
-  #    branches:
+#    branches:
 #- master
 jobs:
   deploy:
@@ -16,3 +16,4 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           source: "SockApplication.jar"
           target: /home/daan/DiscordBots/SockBot
+          overwrite: true
