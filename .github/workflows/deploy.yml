@@ -26,3 +26,14 @@ jobs:
           target: /home/daan/DiscordBots/SockBot
           overwrite: true
           strip_components: 1
+      - name: Rename and restart service
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /home/daan/DiscordBots/SockBot
+            mv SockApplication.jar SockApplication.jar.original
+            mv SockApplication*.jar SockApplication.jar
+            systemctl restart sockbot.service
