@@ -1,6 +1,7 @@
 package me.damascus2000.sockapplication.services;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -21,6 +22,7 @@ public class DataHandler {
     DataHandler(){
         mapper = JsonMapper.builder().findAndAddModules()
                 .build();
+        mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
     }
 
     void save(Object obj) throws IOException{
