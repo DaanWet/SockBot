@@ -5,6 +5,7 @@ import me.damascus2000.sockapplication.entity.assist.MinimalAssistMember;
 import me.damascus2000.sockapplication.entity.assist.Person;
 import me.damascus2000.sockapplication.services.AssistService;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
@@ -153,7 +154,7 @@ public class MembersCommand extends ListenerAdapter {
                 sendMessage(event.getHook(), errorMessage);
             } else {
                 Member discordMember = event.getMember();
-                if (event.getOption("user") != null) {
+                if (event.getOption("user") != null && discordMember.hasPermission(Permission.MANAGE_SERVER)) {
                     discordMember = event.getOption("user").getAsMember();
                 }
                 saveDiscordToUser(response.getBody().getItems().getFirst(), discordMember, event.getHook(), event.getGuild());
