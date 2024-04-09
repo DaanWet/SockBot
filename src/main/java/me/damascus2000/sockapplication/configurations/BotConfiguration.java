@@ -63,7 +63,8 @@ public class BotConfiguration {
                 .addSubcommands(
                     new SubcommandData("claim", "Link je lidmaatschap aan Discord").addOptions(
                         new OptionData(OptionType.STRING, "voornaam", "Voornaam (ingevuld in Assist)"),
-                        new OptionData(OptionType.STRING, "achternaam", "Achternaam (ingevuld in Assist)")
+                        new OptionData(OptionType.STRING, "achternaam", "Achternaam (ingevuld in Assist)"),
+                        new OptionData(OptionType.USER, "user", "User")
                     ),
                     new SubcommandData("edit", "Pas je gegevens aan"))
         ).queue();
