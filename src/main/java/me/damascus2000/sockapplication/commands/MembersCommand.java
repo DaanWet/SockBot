@@ -7,6 +7,7 @@ import me.damascus2000.sockapplication.services.AssistService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -150,20 +151,22 @@ public class MembersCommand extends ListenerAdapter {
             if (response.getBody().getCount() == 0) {
                 sendMessage(event, errorMessage);
             } else {
-                saveDiscordToUser(response.getBody().getItems().getFirst(), event,
-                    event.getMember().getUser().getName());
+                saveDiscordToUser(response.getBody().getItems().getFirst(), event);
             }
         }).subscribe();
     }
 
-    public void saveDiscordToUser(MinimalAssistMember assistMember, SlashCommandInteractionEvent event, String
-        newName) {
+    public void saveDiscordToUser(MinimalAssistMember assistMember, SlashCommandInteractionEvent event) {
         assistService.getMonoMember(assistMember.getId()).doOnSuccess(memberResponseEntity -> {
             AssistMember member = memberResponseEntity.getBody();
             Person person = member.getPerson();
             if (!person.hasDiscordId()) {
-                person.setDiscordName(newName);
-                person.setDiscordUserId(event.getUser().getId());
+                User user = event.getUser();
+                if (event.getOption("user") != null) {
+                    user = event.getOption("user").getAsUser();
+                }
+                person.setDiscordName(user.getName());
+                person.setDiscordUserId(user.getId());
                 assistService.savePerson(
                     person,
                     s -> sendSuccessMessageAndModifyUserRoles(member, event),
