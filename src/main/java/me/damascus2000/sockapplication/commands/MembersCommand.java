@@ -5,10 +5,12 @@ import me.damascus2000.sockapplication.entity.assist.MinimalAssistMember;
 import me.damascus2000.sockapplication.entity.assist.Person;
 import me.damascus2000.sockapplication.services.AssistService;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -148,18 +150,18 @@ public class MembersCommand extends ListenerAdapter {
     private void searchAssistMemberAndSaveIfPossible(String memberName, SlashCommandInteractionEvent event, String errorMessage) {
         assistService.getMonoMembers(memberName).doOnSuccess(response -> {
             if (response.getBody().getCount() == 0) {
-                sendMessage(event, errorMessage);
+                sendMessage(event.getHook(), errorMessage);
             } else {
                 Member discordMember = event.getMember();
                 if (event.getOption("user") != null) {
                     discordMember = event.getOption("user").getAsMember();
                 }
-                saveDiscordToUser(response.getBody().getItems().getFirst(), event, discordMember);
+                saveDiscordToUser(response.getBody().getItems().getFirst(), discordMember, event.getHook(), event.getGuild());
             }
         }).subscribe();
     }
 
-    public void saveDiscordToUser(MinimalAssistMember assistMember, SlashCommandInteractionEvent event, Member discordMember) {
+    public void saveDiscordToUser(MinimalAssistMember assistMember, Member discordMember, InteractionHook hook, Guild guild) {
         assistService.getMonoMember(assistMember.getId()).doOnSuccess(memberResponseEntity -> {
             AssistMember member = memberResponseEntity.getBody();
             Person person = member.getPerson();
@@ -168,29 +170,29 @@ public class MembersCommand extends ListenerAdapter {
                 person.setDiscordUserId(discordMember.getId());
                 assistService.savePerson(
                     person,
-                    s -> sendSuccessMessageAndModifyUserRoles(member, event, discordMember),
-                    err -> sendMessage(event, err.getMessage()));
+                    s -> sendSuccessMessageAndModifyUserRoles(member, discordMember, guild, hook),
+                    err -> sendMessage(hook, err.getMessage()));
             } else {
-                sendMessage(event, "There already is a user connected tot this account");
+                sendMessage(hook, "There already is a user connected tot this account");
             }
         }).subscribe();
     }
 
-    private void sendMessage(SlashCommandInteractionEvent event, String message) {
-        event.getHook().sendMessage(message).queue();
+    private void sendMessage(InteractionHook hook, String message) {
+        hook.sendMessage(message).queue();
     }
 
-    private void sendSuccessMessageAndModifyUserRoles(AssistMember assistMember, SlashCommandInteractionEvent event, Member member) {
-        sendMessage(event, String.format("Linked %s with %s", assistMember.getPerson().getName(), member.getAsMention()));
+    private void sendSuccessMessageAndModifyUserRoles(AssistMember assistMember, Member member, Guild guild, InteractionHook hook) {
+        sendMessage(hook, String.format("Linked %s with %s", assistMember.getPerson().getName(), member.getAsMention()));
         if (assistMember.hasPayedOrIsNew()) {
             if (!assistMember.hasPayed()) {
-                sendMessage(event, member.getAsMention()
+                sendMessage(hook, member.getAsMention()
                     + " Je moet je lidgeld nog betalen, daar heb je nog heel even voor, in tussentijd kan je gewoon overal aan.");
             }
-            event.getGuild().addRoleToMember(member, event.getGuild().getRoleById(MEMBER_ROLE_ID)).queue();
+            guild.addRoleToMember(member, guild.getRoleById(MEMBER_ROLE_ID)).queue();
         } else {
-            sendMessage(event, "Jij bent geen lid meer van Jeugdhuis SOCK");
-            event.getGuild().removeRoleFromMember(member, event.getGuild().getRoleById(MEMBER_ROLE_ID)).queue();
+            sendMessage(hook, "Jij bent geen lid meer van Jeugdhuis SOCK");
+            guild.removeRoleFromMember(member, guild.getRoleById(MEMBER_ROLE_ID)).queue();
         }
         member.modifyNickname(assistMember.getPerson().getName()).queue();
     }
