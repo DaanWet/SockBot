@@ -51,7 +51,7 @@ public class AssistService {
         authenticate();
     }
 
-    private void authenticate() throws Exception {
+    private void authenticate() {
         webClient
             .post()
             .uri(SIGN_IN)
@@ -67,6 +67,7 @@ public class AssistService {
     }
 
     public Mono<ResponseEntity<MembersResponseEntity>> getMonoMembers() {
+        authenticate();
         return webClient.get()
             .uri(getMembersUri(66446))
             .cookie(MODULAS_COOKIE, this.cookies.get(MODULAS_COOKIE).getFirst().getValue())
@@ -78,6 +79,7 @@ public class AssistService {
     }
 
     public Mono<ResponseEntity<MembersResponseEntity>> getMonoMembers(String searchTerm) {
+        authenticate();
         return webClient.get()
             .uri(getMembersUri(66446, searchTerm))
             .cookie(MODULAS_COOKIE, this.cookies.get(MODULAS_COOKIE).getFirst().getValue())
@@ -99,6 +101,7 @@ public class AssistService {
     }
 
     public Mono<ResponseEntity<Person>> getMonoPerson(int id) {
+        authenticate();
         return webClient.get()
             .uri(PERSON + id)
             .cookie(MODULAS_COOKIE, this.cookies.get(MODULAS_COOKIE).getFirst().getValue())
@@ -122,6 +125,7 @@ public class AssistService {
     }
 
     public Mono<ResponseEntity<AssistMember>> getMonoMember(int id) {
+        authenticate();
         return webClient.get()
             .uri(MEMBER + id)
             .header(HttpHeaders.ACCEPT, MediaType.ALL_VALUE)
