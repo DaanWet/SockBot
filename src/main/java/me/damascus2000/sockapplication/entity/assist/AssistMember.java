@@ -25,8 +25,8 @@ public class AssistMember extends Member {
     private String startDate;
     @JsonProperty("EndDate")
     private String endDate;
-    @JsonProperty("PersonId")
-    private int personId;
+    //@JsonProperty("PersonId")
+    //private int personId;
     @JsonProperty("Payed")
     private Boolean payed;
     @JsonProperty("MemberTypeId")

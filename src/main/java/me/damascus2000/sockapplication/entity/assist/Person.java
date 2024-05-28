@@ -17,7 +17,8 @@ import java.util.List;
     "Nationality", "CustomEntityObjectId", "CustomEntityObject", "DisciplineClasificationStatusId", "DisciplineClasificationRevisionDate",
     "IdentityDocumentUrl", "VolunteerStartDate", "VolunteerEndDate", "VolunteerMotivation", "AllOtherAddresses", "PersonXAddresses", "AddressMembers",
     "CallName", "VotasNumber", "BirthPlace", "RegisterNumber", "GenderId", "NationalityId", "HomeAddressId", "IsTemp", "Organization", "HomeAddress",
-    "AssignedFunctions", "Gsm", "HomePhone", "WorkPhone", "HomeEmail", "WorkEmail", "Website", "BirthDate", "HasSocialDiscount", "CanSendCommercial",
+    "AssignedFunctions", "Gsm", "HomePhone", "WorkPhone", "HomeEmailStatus", "HomeEmail", "WorkEmail", "Website", "BirthDate", "HasSocialDiscount",
+    "CanSendCommercial",
     "LastUpdateByPerson", "VolunteerStatusId", "Id", "ExternalId", "FirstName", "LastName", "CannotDeleteMessage", "OrganizationId", "SalutationId",
     "Salutation", "AccessKey", "PublicSavedPersonId", "IBAN", "NumberFederation", "LicensePlate"})
 public class Person extends MinimalPerson {
@@ -102,6 +103,9 @@ public class Person extends MinimalPerson {
     private CustomEntityObject customEntityObject;
     @JsonProperty("HomeAddress")
     private AddressWithRooms homeAddress;
+
+    @JsonProperty("HomeEmailStatus")
+    private String homeEmailStatus;
 
     @JsonIgnore
     public List<CustomEntityFieldValue> getCustomEntityFieldValues() {

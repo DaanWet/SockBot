@@ -10,7 +10,7 @@ import java.util.List;
 @JsonPropertyOrder({"Person", "AssignedFunctions", "Products", "ProductsForPerson", "AllProductsPayed", "Id", "Number", "NumberFederation", "WorkingYearId",
     "ExportCode", "Saldo", "FirstTeamName", "FirstFunctionName", "FamilyMemberNr", "DroppedOut", "DropOutHasBeenProcessed", "MemberMoneyTeam1",
     "MemberMoneyTeam2", "MemberMoneyTeam3", "MemberMoneyTeam4", "MemberMoneyTeam5", "FamilyDiscount", "SocialDiscount", "InvalidDiscount", "OtherDiscount",
-    "InsuranceFee", "Surplus", "PayedAmount", "AccessKey", "PublicSavedPersonId", "MemberMoneySend", "MemberMoneySendDate",})
+    "InsuranceFee", "Surplus", "PayedAmount", "AccessKey", "PersonId", "PublicSavedPersonId", "MemberMoneySend", "MemberMoneySendDate",})
 public abstract class Member {
     @JsonProperty("Person")
     private MinimalPerson person;
@@ -66,6 +66,8 @@ public abstract class Member {
     private double payedAmount;
     @JsonProperty("AccessKey")
     private String accessKey;
+    @JsonProperty("PersonId")
+    private Integer personId;
     @JsonProperty("PublicSavedPersonId")
     private Integer publicSavedPersonId;
     @JsonProperty("MemberMoneySend")
