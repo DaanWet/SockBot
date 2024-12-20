@@ -6,7 +6,12 @@ import me.damascus2000.sockapplication.services.MyUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
@@ -17,10 +22,9 @@ public class AuthController {
     private final MyUserDetailsService myUserDetailsService;
 
     @Autowired
-    public AuthController(MyUserDetailsService myUserDetailsService){
+    public AuthController(MyUserDetailsService myUserDetailsService) {
         this.myUserDetailsService = myUserDetailsService;
     }
-
 
     @GetMapping("/login")
     @ResponseBody
@@ -29,9 +33,9 @@ public class AuthController {
         expectedFormat.setUsername("String");
         expectedFormat.setPassword("String");
         return ResponseEntity.ok(Map.of(
-                "Method", "POST",
-                "Content-Type", "multipart/form-data",
-                "Expected body", expectedFormat
+            "Method", "POST",
+            "Content-Type", "multipart/form-data",
+            "Expected body", expectedFormat
         ));
     }
 
@@ -47,12 +51,9 @@ public class AuthController {
     @GetMapping(value = "/username")
     @ResponseBody
     public ResponseEntity<String> currentUserName(Authentication authentication) {
-        System.out.println(authentication);
         if (authentication == null) {
             return ResponseEntity.notFound().build();
         }
-
         return ResponseEntity.ok(authentication.getName());
     }
-
 }

@@ -1,6 +1,6 @@
 package me.damascus2000.sockapplication.services;
 
-import static me.damascus2000.sockapplication.services.AssistService.MODULAS_COOKIE;
+import static me.damascus2000.sockapplication.services.AssistService.APPLICATION_COOKIE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import me.damascus2000.sockapplication.entity.assist.AssistMember;
 import me.damascus2000.sockapplication.entity.assist.MembersResponseEntity;
 import me.damascus2000.sockapplication.entity.assist.Person;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,12 +25,24 @@ class AssistServiceTest {
     AssistServiceTest() throws Exception {
     }
 
+    @BeforeEach
+    void authenticate() {
+        assistService.authenticate();
+    }
+
+    @Test
+    void shoudlLoginCorrectly() throws Exception {
+
+    }
+
     @Test
     void shouldParsePersonCorrectly() throws Exception {
+        assistService.authenticate();
+
         String string = assistService.webClient.get()
             .uri(AssistService.PERSON + 988155)
             .header(HttpHeaders.ACCEPT, MediaType.ALL_VALUE)
-            .cookie(MODULAS_COOKIE, assistService.cookies.get(MODULAS_COOKIE).getFirst().getValue())
+            .cookie(APPLICATION_COOKIE, assistService.cookies.get(APPLICATION_COOKIE).getFirst().getValue())
             .retrieve()
             .bodyToMono(String.class)
             .block();
@@ -47,7 +60,7 @@ class AssistServiceTest {
         String string = assistService.webClient.get()
             .uri(AssistService.MEMBER + member)
             .header(HttpHeaders.ACCEPT, MediaType.ALL_VALUE)
-            .cookie(MODULAS_COOKIE, assistService.cookies.get(MODULAS_COOKIE).getFirst().getValue())
+            .cookie(APPLICATION_COOKIE, assistService.cookies.get(APPLICATION_COOKIE).getFirst().getValue())
             .retrieve()
             .bodyToMono(String.class)
             .block();
@@ -60,11 +73,11 @@ class AssistServiceTest {
     }
 
     @Test
-    void shoudlParseMinimalMemberCorrectly() throws Exception {
+    void shouldParseMinimalMemberCorrectly() throws Exception {
         String string = assistService.webClient.get()
             .uri(AssistService.getMembersUri(66446))
             .header(HttpHeaders.ACCEPT, MediaType.ALL_VALUE)
-            .cookie(MODULAS_COOKIE, assistService.cookies.get(MODULAS_COOKIE).getFirst().getValue())
+            .cookie(APPLICATION_COOKIE, assistService.cookies.get(APPLICATION_COOKIE).getFirst().getValue())
             .retrieve()
             .bodyToMono(String.class)
             .block();

@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 @Service
 public class AssistService {
 
-    public static final String MODULAS_COOKIE = ".MODULAS";
+    public static final String APPLICATION_COOKIE = ".AspNet.ApplicationCookie";
 
     public static String SIGN_IN = "/signin.aspx";
     public static String MEMBERS_STRING =
@@ -45,23 +45,61 @@ public class AssistService {
     private MultiValueMap<String, String> formData;
 
     public AssistService(@Autowired WebClient webClient, @Autowired MultiValueMap<String, String> formData) throws Exception {
-        System.out.println(formData);
         this.webClient = webClient;
         this.formData = formData;
         authenticate();
     }
 
-    private void authenticate() {
+    public void authenticate() {
         webClient
             .post()
             .uri(SIGN_IN)
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .body(BodyInserters.fromFormData(formData))
             .retrieve()
+            .onStatus(HttpStatusCode::is1xxInformational, clientResponse -> {
+                    System.out.println(clientResponse.statusCode());
+                    System.out.println(clientResponse.cookies());
+                    return clientResponse.createException();
+                }
+            )
+            .onStatus(HttpStatusCode::is2xxSuccessful, clientResponse -> {
+                    MultiValueMap<String, ResponseCookie> cookies = clientResponse.cookies();
+                    clientResponse.cookies().forEach(this.cookies::addAll);
+                    if (!cookies.containsKey(APPLICATION_COOKIE)) {
+                        System.out.println(clientResponse.statusCode());
+                        System.out.println(clientResponse.cookies());
+                        return clientResponse.createException();
+                    }
+                    return Mono.empty();
+                }
+            )
             .onStatus(HttpStatusCode::is3xxRedirection, clientResponse -> {
+                MultiValueMap<String, ResponseCookie> cookies = clientResponse.cookies();
                 clientResponse.cookies().forEach(this.cookies::addAll);
-                return Mono.empty();
+                if (!cookies.containsKey(APPLICATION_COOKIE)) {
+                    System.out.println(clientResponse.statusCode());
+                    System.out.println(clientResponse.cookies());
+                    return clientResponse.createException();
+                }
+                return clientResponse.createException();
             })
+            .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> {
+                System.out.println(clientResponse.statusCode());
+                System.out.println(clientResponse.cookies());
+                return clientResponse.createException();
+            })
+            .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> {
+                System.out.println(clientResponse.statusCode());
+                System.out.println(clientResponse.cookies());
+                return clientResponse.createException();
+            })
+            .onStatus(HttpStatusCode::isError, clientResponse -> {
+                    System.out.println(clientResponse.statusCode());
+                    System.out.println(clientResponse.cookies());
+                    return clientResponse.createException();
+                }
+            )
             .toBodilessEntity()
             .block();
     }
@@ -69,20 +107,20 @@ public class AssistService {
     public Mono<ResponseEntity<MembersResponseEntity>> getMonoMembers() {
         authenticate();
         return webClient.get()
-            .uri(getMembersUri(66446))
-            .cookie(MODULAS_COOKIE, this.cookies.get(MODULAS_COOKIE).getFirst().getValue())
+            .uri(getMembersUri(94390))
+            .cookie(APPLICATION_COOKIE, this.cookies.get(APPLICATION_COOKIE).getFirst().getValue())
             .retrieve()
             .toEntity(MembersResponseEntity.class)
             .doOnError(a -> {
-                throw new RuntimeException("invalid");
+                a.printStackTrace();
             });
     }
 
     public Mono<ResponseEntity<MembersResponseEntity>> getMonoMembers(String searchTerm) {
         authenticate();
         return webClient.get()
-            .uri(getMembersUri(66446, searchTerm))
-            .cookie(MODULAS_COOKIE, this.cookies.get(MODULAS_COOKIE).getFirst().getValue())
+            .uri(getMembersUri(94390, searchTerm))
+            .cookie(APPLICATION_COOKIE, this.cookies.get(APPLICATION_COOKIE).getFirst().getValue())
             .retrieve()
             .toEntity(MembersResponseEntity.class)
             .doOnError(a -> {
@@ -104,7 +142,7 @@ public class AssistService {
         authenticate();
         return webClient.get()
             .uri(PERSON + id)
-            .cookie(MODULAS_COOKIE, this.cookies.get(MODULAS_COOKIE).getFirst().getValue())
+            .cookie(APPLICATION_COOKIE, this.cookies.get(APPLICATION_COOKIE).getFirst().getValue())
             .retrieve()
             .toEntity(Person.class)
             .doOnError(a -> {
@@ -115,7 +153,7 @@ public class AssistService {
     public void savePerson(Person person, Consumer<? super ResponseEntity<Void>> onSucces, Consumer<? super Throwable> onError) {
         webClient.put()
             .uri(PERSON + person.getId())
-            .cookie(MODULAS_COOKIE, this.cookies.get(MODULAS_COOKIE).getFirst().getValue())
+            .cookie(APPLICATION_COOKIE, this.cookies.get(APPLICATION_COOKIE).getFirst().getValue())
             .bodyValue(person)
             .retrieve()
             .toBodilessEntity()
@@ -129,7 +167,7 @@ public class AssistService {
         return webClient.get()
             .uri(MEMBER + id)
             .header(HttpHeaders.ACCEPT, MediaType.ALL_VALUE)
-            .cookie(MODULAS_COOKIE, this.cookies.get(MODULAS_COOKIE).getFirst().getValue())
+            .cookie(APPLICATION_COOKIE, this.cookies.get(APPLICATION_COOKIE).getFirst().getValue())
             .retrieve()
             .toEntity(AssistMember.class)
             .doOnError(a -> {
@@ -137,4 +175,8 @@ public class AssistService {
                 throw new RuntimeException("invalid member id");
             });
     }
+
+    /*public void getBirthDays(){
+        webClient.get().uri();
+    }*/
 }
